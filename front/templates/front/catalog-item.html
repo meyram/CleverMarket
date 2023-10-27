@@ -1,0 +1,481 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block cssLoader %}
+    {% include 'front/cssloader.html' %}
+    {% endblock %}
+    <title></title>
+</head>
+<body>
+{% block header %}
+{% include 'front/headerForm.html' %}
+{% endblock %}
+
+<!-- Modal call -->
+<div class="modal fade" id="call-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <img src="{% static 'front/img/icons/modal-close.svg' %}" alt="">
+        </button>
+        <div class="modal-body">
+            <h3>Оставить заявку компании</h3>
+
+            <form action="{% url 'mailer' %}" class="contact-page-form def-form" method="post">
+                {% csrf_token %}
+                 <input type="hidden" name="form" value="consult">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <label for="name">Имя*</label>
+                        <input type="text" required="" name="name" placeholder="Напишите ваше имя">
+                    </div>
+                    <div class="col-md-6 col-12" >
+                        <label for="name">Телефон*</label>
+                        <input type="text" class="phone" name="phone" placeholder="Напишите ваш телефон">
+                    </div>
+                    <div class="col-12">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" placeholder="Напишите ваш email">
+                    </div>
+                    <div class="col-12">
+                        <label for="review">Комментарий</label>
+                        <textarea name="text" id="" rows="5" placeholder="Ваш комментарий"></textarea>
+                    </div>
+                    <input type="hidden" name="companyemail" value="{{ company.info.email }}">
+                    <input type="hidden" name="compid" value="{{ company.pk }}">
+                    <div class="col-md-12 col-12">
+                        <button type="submit" class="button">Отправить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Modal call -->
+{% for service in services %}
+<div class="modal fade" id="call-modal-service{{service.pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <img src="{% static 'front/img/icons/modal-close.svg' %}" alt="">
+        </button>
+        <div class="modal-body">
+            <h3>Оставить заявку на {{service.name}}</h3>
+            <form action="{% url 'mailer' %}" class="contact-page-form def-form" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="form" value="service-call">
+                <input type="hidden" name="service" value="{{service.name}}">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <label for="name">Имя*</label>
+                        <input type="text" id="name" required="" name="name" placeholder="Напишите ваше имя">
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <label for="phone">Телефон*</label>
+                        <input type="text" id="phone" required="" class="phone" name="phone" placeholder="Напишите ваш телефон">
+                    </div>
+                    <div class="col-12">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Напишите ваш email">
+                    </div>
+                    <div class="col-12">
+                        <label for="review">Комментарий</label>
+                        <textarea name="text" id="review" rows="5" placeholder="Ваш комментарий"></textarea>
+                    </div>
+                    <input type="hidden" name="companyemail" value="{{ company.info.email }}">
+                    <input type="hidden" name="compid" value="{{ company.pk }}">
+                    <div class="col-md-12 col-12">
+                        <button type="submit" class="button">Отправить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</div>
+{% endfor %}
+<section>
+    <div class="container">
+        <div class="catalog-item-header">
+            <div class="catalog-item-logo">
+                <img src="/media/{{ company.files.picture }}" onerror="this.onerror=null;this.src='{% static 'front/img/product/1.png' %}';" alt="">
+            </div>
+            <div class="catalog-item-banner">
+                <img src="/media/{{ company.files.banner }}" onerror="this.onerror=null;this.src='{% static 'front/img/product/1.png' %}';" alt="">
+
+                <div class="info">
+                    <h3>{{ company.info.name }}</h3>
+                    <p class="catalog-item-category">
+                        {% if company_category.category.name %}
+                        {{company_category.category.name}}
+                        {% else %}
+                        Категория не выбрана
+                        {% endif %}
+                    </p>
+                </div>
+
+                <p class="catalog-item-id">Id: {{company.info.fake_id}}</p>
+                {% for tarif in company.tarifes.all %}
+                    {% if tarif.tarif.name == 'PREMIUM' %}
+                        <div class="catalog-item-premium active">premium</div>
+                    {% else %}
+                        <div class="catalog-item-premium ">premium</div>
+                    {% endif %}
+                {% endfor%}
+            </div>
+        </div>
+
+        <div class="catalog-item-body">
+            <div class="catalog-item-info">
+                <h2>Описание</h2>
+
+                <p class="text">{{company.info.description}} </p>
+                <div class="button my-4" data-toggle="modal" data-target="#call-modal">Оставить заявку на консультацию</div>
+                {% if company_properties %}
+                {% for property in company_properties %}
+                <a href="" class="cataog-item-character">{{ property.name }} </a>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="catalog-item-contact">
+                <p class="title">КОНТАКТЫ</p>
+
+                <table>
+                    <tbody> 
+                        <tr>
+                            <td>Город: </td>
+                            <td>{{ company.info.city }}</td>
+                        </tr>
+                        <tr>
+                            <td>Адрес:</td>
+                            <td><button id="buttonShowAdress" class="Contact-click" onclick="ShowAdress()">Показать адрес</button><bzbz id="company_adress" style="display: none">{{ company.info.adress }}</bzbz></td>
+                        </tr>
+                        <tr>
+                            <td>Время-работы:</td>
+                            <td>{{ company.info.worktime }}</td>
+                        </tr>
+                        <tr>
+                            <td>Телефоны:</td>
+
+                            <td><button id="buttonShowPhone" class="Contact-click" onclick="ShowPhone()">Показать телефон</button> <bzbz id="company_phone" style="display: none">{{ company.info.phone }}</bzbz></td>
+                        </tr>
+                        <tr>
+                            <td>Почта:</td>
+                            <td>{{ company.info.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Сайт:</td>
+                            <td>{{ company.info.site }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p class="title">ФАЙЛЫ</p>
+
+                <div class="catalog-item-file">
+
+                {% for fi in File %}
+                    <div class="catalog-item-file-item">
+                            <div class="catalog-item-file-icon"><img src="{% static 'front/img/icons/catalog-item-file-icon.svg' %}" alt=""></div>
+                        <div>
+                            <div class="catalog-item-file-name">{{fi.note}}</div>
+                            <div class="catalog-item-file-info"> {{ fi.file.size }} байт </div>
+                        </div>
+                            <a href="{{ fi.file.url }}" target="_blank" download="true" class="catalog-item-file-download">Скачать</a>
+                    </div>
+                {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+  {% if isServices == 1 %}
+<section>
+    <div class="container">
+        <h2>Услуги</h2>
+
+        <div class="catalog-item-services-div">
+            <!-- Swiper -->
+
+            <div class="swiper-container catalog-item-services">
+                <div class="swiper-wrapper">
+                 {% for service in services %}
+                      {% if service.company_fk == company.pk %}
+                    <div class="swiper-slide">
+
+                        <div class="catalog-item-service">
+                            <div class="catalog-item-service-header">
+                                <p class="catalog-item-service-title">{{ service.name }}</p>
+                            </div>
+                            <div class="catalog-item-service-img">
+                                <img src="/media/{{ service.image }}" alt="">
+                            </div>
+                            <div class="catalog-item-service-body">
+                                <!-- макс сим. - 100 -->
+                                <p class="catalog-item-service-desc">{{ service.description }}</p>
+                            </div>
+                            <div class="catalog-item-service-footer">
+                                 <div class="button my-4" data-toggle="modal" data-target="#call-modal-service{{service.pk}}">Оставить заявку </div>
+                                <p class="catalog-item-service-title">{{ service.price }} тг. </p>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endif %}
+                        {% endfor %}
+                </div>
+
+                <div class="swiper-pag-div">
+                    <div class="swiper-button-prev"><img src="{% static 'front/img/icons/swiper-next.svg' %}" alt=""></div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"><img src="{% static 'front/img/icons/swiper-prev.svg' %}" alt=""></div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</section>
+ {% endif %}
+
+   {% if isbranch == 1 %}
+<section>
+    <div class="container">
+
+        <div class="catalog-item-filials-div">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Город </th>
+                        <th>Адрес </th>
+                        <th>Телефоны </th>
+                        <th>Почта </th>
+                        <th>Время работы </th>
+                    </tr>
+                </thead>
+                    <tbody>
+
+                                                {% for branch in branches %}
+                                                {% if branch.company_fk == company.pk  %}
+                                                                       <tr>
+                                                                        <td>{{ branch.city }}</td>
+                                                                        <td>{{ branch.address }}</td>
+                                                                        <td>{{ branch.phone }}</td>
+                                                                        <td>{{ branch.email }}</td>
+                                                                        <td>{{ branch.worktime }}</td>
+                                                                       </tr>
+                                                {% elif not branch.pk %}
+                                                   <tr>
+                                                                        <td>Не существует</td>
+
+                                                                       </tr>
+                                                {% endif %}
+                                                {% endfor %}
+                   </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+<section>
+    <div class="container">
+        <h2>Отзывы</h2>
+
+        <div class="catalog-item-review" data-toggle="modal" data-target="#review-modal">
+            <img src="{% static 'front/img/icons/review.svg' %}" alt="">
+            <p class="catalog-item-review-title">
+                Оставьте свой отзыв
+            </p>
+        </div>
+
+        <!-- Modal review -->
+        <div class="modal fade" id="review-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <img src="{% static 'front/img/icons/modal-close.svg' %}" alt="">
+                </button>
+                <div class="modal-body">
+                    <h3>Оставить отзыв</h3>
+
+                    <form action="{% url 'Catalog-item' company.pk %}" method="post" class="contact-page-form def-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="pk" value="{{ company.pk }}">
+                        <input type="hidden" name="form" value="review-add">
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <label for="name">Имя</label>
+                                <input type="text" required="" name="name" placeholder="Напишите ваше имя">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <label for="email">Email</label>
+                                <input type="email" required="" name="email" placeholder="Напишите ваш email">
+                            </div>
+                            <div class="col-md-12 col-12">
+                                <label for="review">Отзыв</label>
+                                <textarea name="review" id="" rows="5" placeholder="Ваш отзыв"></textarea>
+                            </div>
+                            <div class="col-md-12 col-12">
+                                <button type="submit" class="button">Отправить</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+            <div class="catalog-item-reviews-div">
+            {% for review in Reviews %}
+            {% if review.pk_number == company.pk and review.status == review.StatusChoices.ACTIVE %}
+            <div class="catalog-item-review-item">
+                <p class="catalog-item-review-item-name">{{ review.name }}</p>
+                <p class="catalog-item-review-item-name">{{ review.email }}</p>
+                <p class="text">{{ review.review }} </p>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+
+{% if company_members %}
+<section>
+    <div class="container">
+        <h2>Партнеры компании</h2>
+        <div class="catalog-item-partners-div">
+            {% for company_member in company_members %}
+            <a href="{% url 'Catalog-item' company_member.member.pk %}" class="catalog-item-partners-item">
+                <img src="/media/{{ company_member.member.files.picture }}" onerror="this.onerror=null;this.src='{% static 'front/img/product/1.png' %}';" alt="">
+            </a>
+             {% endfor %}
+        </div>
+
+    </div>
+</section>
+{% endif %}
+{% if same_companies %}
+<section>
+    <div class="container">
+        <h2>Похожие компании</h2>
+        <div class="catalog-item-same-div">
+            <!-- Swiper -->
+            <div class="swiper-container view1 catalog-item-services">
+                <div class="swiper-wrapper">
+                    {% for c in same_companies %}
+                    {% if c.company == company %}
+                    {% else %}
+                    <div class="swiper-slide">
+                        <div class="product-item" data-tilt data-tilt-perspective="5000">
+                            <a href="" class="product-img">
+                                <img src="/media/{{ company.files.picture }}" onerror="this.onerror=null;this.src='{% static 'front/img/product/1.png' %}';"  alt="">
+                            </a>
+                            <div class="product-body">
+                                <a href="{% url 'Catalog-item' c.company.pk %}" class="product-name">{{c.company.info.name}}</a>
+                                {% for company_category in company.categories.all %} <a href="?filter-category={{ company_category.pk }}" class="product-cotegory">
+                                 {{ company_category.category.name }} </a> {% endfor %}
+                                <!-- макс сим. - 100 -->
+                                <p class="product-desc">{{c.company.info.description}}</p>
+                            </div>
+                            <div class="product-footer">
+                                <a href="{% url 'Catalog-item' c.company.pk %}" class="button">Подробнее</a>
+                                <button class="like-btn favorite">
+                                    <img src="{% static 'front/img/icons/favourite.svg' %}" class="no-active">
+                                    <img src="{% static 'front/img/icons/favourite1.svg' %}" class="active">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+     {% endfor %}
+                </div>
+
+                <div class="swiper-pag-div">
+                    <div class="swiper-button-prev"><img src="{% static 'front/img/icons/swiper-next.svg' %}" alt=""></div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"><img src="{% static 'front/img/icons/swiper-prev.svg' %}" alt=""></div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+{% block footer %}
+{% include 'front/footerForm.html' %}
+{% endblock footer %}
+
+
+
+
+
+
+
+{% block jsLoad %}
+{% include 'front/jsLoader.html' %}
+{% endblock jsLoad %}
+
+<script>
+    function ShowPhone(){
+        var x = document.getElementById("company_phone");
+        var y = document.getElementById("buttonShowPhone");
+        if(x.style.display === "none"){
+            x.style.display = "block";
+            y.style.display = "none"
+            sendClickToBase();
+        } else{
+            x.style.display = "none";
+        }
+    }
+    function sendClickToBase(){
+        $.ajax({
+            type: "POST",
+            url: "{% url 'Catalog-item' company.pk %}",
+            data: {
+                "form": "phoneclick",
+                "csrfmiddlewaretoken": "{{ csrf_token }}",
+            },
+
+        });
+    }
+    function ShowAdress(){
+        var x = document.getElementById("company_adress");
+        var y = document.getElementById("buttonShowAdress");
+        if(x.style.display === "none"){
+            x.style.display = "block";
+            y.style.display = "none"
+            sendClickToBaseAdress();
+        } else{
+            x.style.display = "none";
+        }
+    }
+    function sendClickToBaseAdress(){
+        $.ajax({
+            type: "POST",
+            url: "{% url 'Catalog-item' company.pk %}",
+            data: {
+                "form": "adressclick",
+                "csrfmiddlewaretoken": "{{ csrf_token }}",
+            },
+
+        });
+    }
+</script>
+</body>
+</html>

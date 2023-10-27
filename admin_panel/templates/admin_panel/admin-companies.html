@@ -1,0 +1,207 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="Frest admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Frest admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <title>Users List - Frest - Bootstrap HTML admin template</title>
+    {% block cssLoader %}
+    {% include 'admin_panel/cssLoader.html' %}
+    {% endblock cssLoader %}
+
+</head>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+
+<body class="vertical-layout vertical-menu-modern semi-dark-layout 2-columns  navbar-sticky footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" data-layout="semi-dark-layout">
+
+    <!-- BEGIN: Header-->
+    {% block content %}
+    {% include 'admin_panel/headerFORM.html' %}
+    {% endblock %}
+    <!-- END: Header-->
+
+
+    <!-- BEGIN: Main Menu-->
+    {% block menu %}
+    {% include 'admin_panel/mainMenuFORM.html' %}
+    {% endblock menu %}
+   <!-- END: Main Menu-->
+
+
+    <!-- BEGIN: Content-->
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+            </div>
+            <div class="content-body">
+                <!-- users list start -->
+                <section class="users-list-wrapper">
+
+                    <div class="users-list-table">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <!-- datatable start -->
+                                    <div class="table-responsive">
+                                        <table id="users-list-datatable" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>id</th>
+                                                    <th>Логин</th>
+                                                    <th>Имя</th>
+                                                    <th>Дата регистрации</th>
+                                                    <th>Категория</th>
+                                                    <th>Статус</th>
+                                                    <th>Править</th>
+                                                    <th>Тариф</th>
+                                                    {% if user.card.role == 'ADMINISTRATOR' %}
+                                                    <th>Пополнить баланс</th>
+                                                    {% endif %}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                  {% for company in companies %}
+                                                  <tr>
+                                                    <td>{{ company.pk }}</td>
+                                                    <td><a href="{% url 'company-edit' company.pk %}">{{ company.owner }}</a>
+                                                    </td>
+                                                    <td>{{ company.info.name }}</td>
+                                                    <td>{{ company.owner.date_joined }}</td>
+                                                    <td>
+                                                        {% for category in company.categories.all %}
+                                                        {{ category.category.name }}
+                                                        {% endfor %}
+                                                    </td>
+                                                      {% if company.status == company.StatusChoices.PENDING %}
+                                                      <td><span class="badge badge-light-warning ">{{ company.status }}</span></td>
+                                                      {% elif company.status == company.StatusChoices.ACCEPTED %}
+                                                      <td><span class="badge badge-light-success ">{{ company.status }}</span></td>
+                                                      {% elif company.status == company.StatusChoices.BANNED %}
+                                                      <td><span class="badge badge-light-dark ">{{ company.status }}</span></td>
+                                                      {% elif company.status == company.StatusChoices.CLOSED %}
+                                                      <td><span class="badge badge-light-dark ">{{ company.status }}</span></td>
+                                                      {% endif %}
+                                                      <td><a href="{% url 'company-edit' company.pk %}"><i class="bx bx-edit-alt"></i></a></td>
+                                                           <td><a href="{% url 'tarif' company.pk %}">{% if company.tarifes.get %}
+                                                               {%for tarif in company.tarifes.all%}
+                                                               {% if tarif.tarif.name == 'PREMIUM' %}
+                                                               <p class="warning">{{ tarif.tarif.name }}</p>
+                                                               {% elif tarif.tarif.name == 'STANDART' %}
+                                                               <p class="danger">{{ tarif.tarif.name }}</p>
+                                                               {% else %}
+                                                               <p class="danger">{{ tarif.tarif.name }}</p>
+                                                               {% endif %}
+                                                               {% endfor %}
+                                                               {% else %}
+                                                               Выбрать тариф
+                                                               {% endif %}
+                                                           </a></td>
+
+                                                      {% if user.card.role == 'ADMINISTRATOR' %}
+                                                        <td><a href="{% url 'balance-charge' company.owner.pk %}">{{company.owner.balance.value}}</a></td>
+                                                      {% endif %}
+                                                </tr>
+                                                  {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- datatable ends -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- users list ends -->
+            </div>
+        </div>
+    </div>
+    <!-- END: Content-->
+
+    <!-- demo chat-->
+    <div class="widget-chat-demo">
+           <!-- widget chat demo start -->
+        <div class="widget-chat widget-chat-demo d-none">
+            <div class="card mb-0">
+                <div class="card-header border-bottom p-0">
+                    <div class="media m-75">
+                        <a href="JavaScript:void(0);">
+                            <div class="avatar mr-75">
+                                <img src="{% static 'admin_panel/app-assets/images/portrait/small/avatar-s-2.jpg' %}" alt="avtar images" width="32" height="32">
+                                <span class="avatar-status-online"></span>
+                            </div>
+                        </a>
+                        <div class="media-body">
+                            <h6 class="media-heading mb-0 pt-25"><a href="javaScript:void(0);">Kiara Cruiser</a></h6>
+                            <span class="text-muted font-small-3">Active</span>
+                        </div>
+                        <i class="bx bx-x widget-chat-close float-right my-auto cursor-pointer"></i>
+                    </div>
+                </div>
+                <div class="card-body widget-chat-container widget-chat-demo-scroll">
+                    <div class="chat-content">
+                        <div class="badge badge-pill badge-light-secondary my-1">today</div>
+                        <div class="chat">
+                            <div class="chat-body">
+                                <div class="chat-message">
+                                    <p>How can we help? 😄</p>
+                                    <span class="chat-time">7:45 AM</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat chat-left">
+                            <div class="chat-body">
+                                <div class="chat-message">
+                                    <p>Hey John, I am looking for the best admin template.</p>
+                                    <p>Could you please help me to find it out? 🤔</p>
+                                    <span class="chat-time">7:50 AM</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat">
+                            <div class="chat-body">
+                                <div class="chat-message">
+                                    <p>Stack admin is the responsive bootstrap 4 admin template.</p>
+                                    <span class="chat-time">8:01 AM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer border-top p-1">
+                    <form class="d-flex" onsubmit="widgetChatMessageDemo();" action="javascript:void(0);">
+                        <input type="text" class="form-control chat-message-demo mr-75" placeholder="Type here...">
+                        <button type="submit" class="btn btn-primary glow px-1"><i class="bx bx-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- widget chat demo ends -->
+
+    </div>
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+    <!-- BEGIN: Footer-->
+     {% block footer %}
+    {% include 'admin_panel/footerFORM.html' %}
+    {% endblock footer %}
+    <!-- END: Footer-->
+
+    {% block jsLoader %}
+    {% include 'admin_panel/jsLoader.html' %}
+    {% endblock jsLoader %}
+
+</body>
+<!-- END: Body-->
+
+</html>

@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="Frest admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Frest admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <title>Account Settings - Frest - Bootstrap HTML admin template</title>
+
+    {% block cssLoader %}
+    {% include 'admin_panel/cssLoader.html' %}
+    {% endblock cssLoader %}
+
+</head>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+
+<body class="vertical-layout vertical-menu-modern semi-dark-layout 2-columns  navbar-sticky footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" data-layout="semi-dark-layout">
+
+    <!-- BEGIN: Header-->
+    {% block content %}
+    {% include 'admin_panel/headerFORM.html' %}
+    {% endblock %}
+    <!-- END: Header-->
+
+
+      <!-- BEGIN: Main Menu-->
+    {% block menu %}
+    {% include 'admin_panel/mainMenuFORM.html' %}
+    {% endblock menu %}
+   <!-- END: Main Menu-->
+
+
+    <!-- BEGIN: Content-->
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-12 mb-2 mt-1">
+                    <div class="row breadcrumbs-top">
+                        <div class="col-12">
+                            <h5 class="content-header-title float-left pr-1 mb-0">Изменение новости {{ new.pk}}</h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-body">
+                <!-- account setting page start -->
+                <section id="page-account-settings">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+
+                                <!-- right content section -->
+                                <div class="col-md-9">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <div class="card-body">
+                                                <div class="tab-content">
+                                                    <div role="tabpanel" class="tab-pane active" id="account-vertical-general" aria-labelledby="account-pill-general" aria-expanded="true">
+                                                        <form action="{% url 'news-edit' new.pk %}" method="POST" enctype="multipart/form-data">
+                                                             {% csrf_token %}
+                                                             <input type="hidden" name="form" value="edit">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <div class="controls">
+                                                                            <label>Заголовок</label>
+                                                                            <input type="text" class="form-control" name = "title" placeholder="Заголовок" value="{{ new.title }}" required data-validation-required-message="This login field is required">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <div class="controls">
+                                                                            <label>Описание</label>
+                                                                            <input type="text" class="form-control" name = "description" placeholder="Описание" value="{{ new.description }}" required data-validation-required-message="This name field is required">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <div class="controls">
+                                                                            <label>Текст</label>
+                                                                            <textarea type="text" class="form-control "  name = "text" placeholder="Текст"required data-validation-required-message="This password field is required">{{ new.text }}</textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <div class="controls">
+                                                                            <label>Картинка</label>
+                                                                            <input type="file"  name = "img" required data-validation-required-message="This password field is required"></input>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12 d-flex flex-sm-row flex-column justify-content-end">
+                                                                    <button type="submit" class="btn btn-primary glow mr-sm-1 mb-1">Отправить</button>
+                                                                    <a type="reset" class="btn btn-light mr-sm-1 mb-1" href="{% url 'admin-news' %}">Закрыть</a>
+                                                                      <button type="button" class="btn btn-danger mb-1" data-toggle="modal" data-target="#deleteForm"> Удалить новость </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                          <form action="{% url 'news-edit' new.pk %}" method="post" id="delete-new">
+                                                                {% csrf_token %}
+                                                                 <input type="hidden" name="form" value="delete">
+                                                        </form>
+                                                    </div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                </section>
+                <!-- account setting page ends -->
+            </div>
+        </div>
+    </div>
+    <!-- END: Content-->
+
+
+<div class="modal text-left" id="deleteForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+
+              <div class="modal-body">
+                  <div class="swal2-icon swal2-warning swal2-animate-warning-icon" style="display: flex;"><span class="swal2-icon-text">!</span></div>
+                  <h4 class="modal-title text-center" >Вы действительно хотите удалить новость?</h4>
+                  <p class="text text-center">Данное действие невозможно отменить.</p>
+              <div class="mt-2 d-flex flex-sm-row flex-column justify-content-center">
+                <a type="reset" class="btn btn-light mb-1 mr-sm-1 text-white" data-dismiss="modal" aria-label="Close">Закрыть</a>
+               <input type="submit" class="btn btn-danger mb-1" form="delete-new" value="Удалить категорию">
+              </div>
+              </div>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+    <!-- BEGIN: Footer-->
+    {% block footer %}
+    {% include 'admin_panel/footerFORM.html' %}
+    {% endblock footer %}
+    <!-- END: Footer-->
+
+
+
+    {% block jsLoader %}
+    {% include 'admin_panel/jsLoader.html' %}
+    {% endblock jsLoader %}
+
+</body>
+<!-- END: Body-->
+
+</html>

@@ -1,0 +1,5 @@
+[client]
+database = topbuild_test
+user = topbuild_test
+password = 10%2OBiG
+default-character-set = utf8

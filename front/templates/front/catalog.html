@@ -1,0 +1,205 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block cssLoader %}
+    {% include 'front/cssloader.html' %}
+    {% endblock %}
+    <title></title>
+</head>
+<body>
+
+
+{% block header %}
+{% include 'front/headerForm.html' %}
+{% endblock %}
+
+
+<section>
+    <div class="container">
+        <div class="catalog-header">
+            <div>
+                <h3>Компании в Казахстане</h3>
+
+                <p class="text">Найдено {{number_of_companies}} компаний</p>
+            </div>
+
+            <div>
+                <a href="{% url 'auth-register' %}" class="button-r">Добавить Компанию <img src="{% static 'front/img/icons/add-company.svg' %}" alt=""></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="catalog-filter-div">
+        <div class="catalog-filter-inner">
+            <div class="catalog-filter-header">
+                <p class="catalog-filter-more-search">Расширенный поиск</p>
+                <div class="catalog-filter-select">
+                    <p>Сортировать по: </p>
+                    <select class="catalog-select">
+                        <option>Новизне</option>
+                        <option>Названию</option>
+                        <option>Рейтингу</option>
+                    </select>
+                </div>
+            </div>
+            <div class="catalog-filter-body">
+                <div class="catalog-filter-body-inner">
+                    <form action="{% url 'Catalog' %}" method="get">
+                    <div class="catalog-filter-categories-div">
+                        {% for category in categories %}
+                        <div class="catalog-filter-categories-item">
+                            <div>
+                                <p class="catalog-filter-categories-title">{{ category.name }}</p>
+                            </div>
+                        {% for child in category.childs.all %}
+                            <div>
+                                <input type="checkbox" id="{{ child.pk }}" name="filter-category" value="{{ child.pk }}">
+                                <label for="{{ child.pk }}">   {{ child.name }} </label>
+                            </div>
+                        {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <select data-placeholder="Характеристики..." multiple class="chosen-select" name="properties" tabindex="8">
+                        {% for property in properties %}
+                        <option value="{{property.pk}}">{{ property.name }}</option>
+                        {% endfor %}
+                      </select>
+
+                      <button type="submit" class="button">Искать</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% if companies.object_list %}
+<section>
+    <div class="container">
+        <div class="view2 product-div">
+            {% for company in companies.object_list %}
+            {% if company.tarifes.get %}
+               {%for tarif in company.tarifes.all%}
+               {% if tarif.tarif.name == 'PREMIUM' %}
+               <div class="product-item premium " data-tilt data-tilt-perspective="5000">
+               {% elif tarif.tarif.name == 'STANDART' %}
+               <div class="product-item " data-tilt data-tilt-perspective="5000">
+                    {% else %}
+               <div class="product-item " data-tilt data-tilt-perspective="5000">
+            {% endif %}
+            {% endfor %}
+               {% else %}
+               <div class="product-item " data-tilt data-tilt-perspective="5000">
+            {% endif %}
+                <a href="{% url 'Catalog-item' company.pk %}" class="product-img">
+                    <img src="/media/{{ company.files.picture }}" onerror="this.onerror=null;this.src='{% static 'front/img/product/1.png' %}';" alt="">
+                </a>
+                <div class="product-body">
+                    <a href="{% url 'Catalog-item' company.pk %}" class="product-name">{{ company.info.name }}</a>
+                    {% for company_category in company.categories.all %} <a class="product-cotegory">
+                     {{ company_category.category.name }}
+                    </a>
+                      {% endfor %}
+                    <!-- макс сим. - 100 -->
+                    <p class="product-desc">{{ company.info.short_description }}</p>
+                    <div class="product-footer">
+                        <a href="{% url 'Catalog-item' company.pk %}" class="button">Подробнее</a>
+                        <button class="like-btn favorite {% for item in request.session.favourites %}{% if item.id == company.pk|stringformat:"i" %} active {% endif %} {% endfor %}" value="{{ company.pk }}">
+                            <img src="{% static 'front/img/icons/favourite.svg' %}" class="no-active">
+                            <img src="{% static 'front/img/icons/favourite1.svg' %}" class="active">
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+               {% if is_paginated %}
+     <div class="pagination">
+            <div class="pagination-div">
+                <a href="{%if not prev_url %} {% endif %}{{ prev_url }}" class="arrow">
+                    <svg width="4" height="7" viewBox="0 0 4 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 0.763326L1.52663 3.23669L4 5.71006L3.2367 6.47339L3.79899e-07 3.23669L3.2367 -2.89439e-06L4 0.763326Z"/>
+                    </svg>
+                </a>
+                <div class="pagination-pages">
+                    {% for n in companies.paginator.page_range %}
+                        {% if companies.number == n %}
+                             <a href="?page={{ n }}"> <div class="pagination-pages-item active">{{ n }}</div></a>
+                        {% elif n > companies.number|add:-3 and n < companies.number|add:3 %}
+                               <a href="?page={{ n }}"> <div class="pagination-pages-item ">{{ n }}</div></a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <a href="{%if not next_url %} {% endif %}{{ next_url }}" class="arrow">
+                    <svg width="4" height="7" viewBox="0 0 4 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M-2.49595e-07 0.763326L2.47337 3.23669L-3.33662e-08 5.71006L0.763304 6.47339L4 3.23669L0.763304 -2.89439e-06L-2.49595e-07 0.763326Z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+     </div>
+
+</section>
+ {% else %}
+                    <section id="no-search">
+                        <div class="container">
+                            <div class="no-search">
+                                <p class="no-search-title">Хм, странно что такой компании нет у нас</p>
+                                <img src="{% static 'front/img/icons/no-search-img.svg' %}" alt="">
+                                <a href="{% url 'auth-register' %}" class="button">Добавить!</a>
+                            </div>
+                        </div>
+                    </section>
+                    {% endif %}
+
+
+
+{% block jsLoad %}
+{% include 'front/jsLoader.html' %}
+{% endblock jsLoad %}
+
+<script>
+$(".favorite").click( function() {
+    var id = $(this).attr("id");
+    if ($(this).hasClass("active")) {
+         $(this).removeClass("active");
+         $.ajax({
+            type: "POST",
+            url: "{% url 'favourites-remove' %}",
+            data: {
+                "type": "Company",
+                "url_from": "{{request.path}}",
+                "id": id,
+                "csrfmiddlewaretoken": "{{ csrf_token }}",
+            },
+
+        });
+    }
+    else{
+       $(this).addClass("active");
+        $.ajax({
+            type: "POST",
+            url: "{% url 'favourites-add' %}",
+            data: {
+                "type": "Company",
+                "url_from": "{{request.path}}",
+                "id": id,
+                "csrfmiddlewaretoken": "{{ csrf_token }}",
+            },
+
+        });
+    }
+
+})
+</script>
+  {% block footer %}
+    {% include 'front/footerForm.html' %}
+    {% endblock footer %}
+</body>
+</html>

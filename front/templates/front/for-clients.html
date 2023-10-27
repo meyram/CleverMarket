@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block cssLoader %}
+    {% include 'front/cssloader.html' %}
+    {% endblock %}
+    <title></title>
+</head>
+<body class="main-page">
+
+
+{% block header %}
+{% include 'front/headerForm.html' %}
+{% endblock %}
+
+
+<section>
+    <div class="container">
+        <div class="default-div">
+            <h2>О сервисе</h2>
+            <div class="row">
+                <div class="col-md-6 col-12">
+                    <p class="text">Сервис TopBuild отбирает, привлекает и размещает исключительно компетентных, надёжных и сертифицированных подрядчиков в сфере строительства, начиная от продажи материалов и заканчивая ремонтными работами и дизайном. В базе также размещается информация от подрядчиков больших строительных объектов и строящихся домов.</p>
+                </div>
+
+                <div class="col-md-6 col-12">
+                    <p class="text">Наш сервис представляет собой внушительный каталог строительных компаний Казахстана. На данном сайте пользователь может удобно по категориям найти интересующую организацию в строительной сфере. Все компании на сервисе TopBuild тщательно</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <h2>Видео инструкция для клиентов</h2>
+        <div class="default-video-div">
+            <div class="default-video-after">
+                <img src="img/default/1.png" alt="">
+            </div>
+            <iframe class="default-video" width="100%" height="500px" src="https://www.youtube.com/embed/nRTJd91G04Q?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="default-div">
+            <h2>Преимущества TopBuild для пользователей:</h2>
+            <div class="row">
+                <div class=" col-12">
+                    <p class="text">Почему стоит заказывать услуги по ремонту и строительству именно на сайте? Выбирая строительную компанию в нашем каталоге, вы можете быть на 100% уверенными в том, что подрядчик сертифицирован и надёжен. Вся информация об организациях проходит обязательную модерацию администраторами проекта. Всё максимально удобно, доступно и выгодно. Вы сами решаете, кому доверить исполнение своего заказа. Кроме того, вы экономите временной ресурс. Вам больше не нужно искать бригады, подрядчиков, исполнителей в строительной сфере на разных площадках. <br> Сделать ремонт в квартире или даже построить загородный дом? Легко! Ведь для этого есть TopBuild! Ваш реальный персональный помощник в строительной сфере.</p>
+                </div>
+            </div>
+            <a href="" class="button">Каталог компаний</a>
+        </div>
+
+    </div>
+</section>
+
+
+
+    {% block footer %}
+    {% include 'front/footerForm.html' %}
+    {% endblock footer %}
+
+{% block jsLoad %}
+{% include 'front/jsLoader.html' %}
+{% endblock jsLoad %}
+
+    {% if error == 0 %}
+    <script>
+    $('#subscribe-modal').modal('show')
+    </script>
+    {% endif %}
+
+</body>
+</html>
+

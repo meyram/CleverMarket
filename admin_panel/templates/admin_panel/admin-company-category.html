@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="Frest admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Frest admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <title>Users List - Frest - Bootstrap HTML admin template</title>
+
+    {% block cssLoader %}
+    {% include 'admin_panel/cssLoader.html' %}
+    {% endblock cssLoader %}
+
+</head>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+
+<body class="vertical-layout vertical-menu-modern semi-dark-layout 2-columns  navbar-sticky footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" data-layout="semi-dark-layout">
+
+    <!-- BEGIN: Header-->
+    {% block content %}
+    {% include 'admin_panel/headerFORM.html' %}
+    {% endblock %}
+    <!-- END: Header-->
+
+
+    <!-- BEGIN: Main Menu-->
+    {% block menu %}
+    {% include 'admin_panel/mainMenuFORM.html' %}
+    {% endblock menu %}
+   <!-- END: Main Menu-->
+
+    <!-- BEGIN: Content-->
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+            </div>
+            <div class="content-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Добавить категорию</h4>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <form class="form form-horizontal" action="{% url 'company-category' %}" method="post">
+                                                {% csrf_token %}
+                                                {% if error %}
+                                                {% if error == 0 %}
+                                                <p>Категория создана</p>
+                                                {% elif error == 1 %}
+                                                <p>Такая категория уже существтует</p>
+                                                {% endif %}
+                                                {% endif %}
+                                                <div class="form-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>Название</label>
+                                                        </div>
+                                                        <div class="col-md-8 form-group">
+                                                            <input type="text" id="first-name" class="form-control" name="name" placeholder="Название">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label>Род. категория</label>
+                                                        </div>
+                                                        <div class="col-md-8 form-group">
+                                                            <div class="form-group">
+                                                               <select class="form-control" id="accountSelect"  name="parent_id" >
+                                                                             <option value="0">
+            None
+        </option>
+        {% for category in parents %}
+            <option value="{{ category.pk }}">
+                {{ category.name }}
+            </option>
+        {% endfor %}
+                                                                        </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12 d-flex justify-content-end">
+                                                            <button type="submit" class="btn btn-primary">Добавить</button>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="col-8">
+                              <!-- table success start -->
+                <section id="table-success">
+                    <div class="card">
+                        <!-- datatable start -->
+
+
+                        <div class="table-responsive">
+                            <table id="table-extended-success" class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Название</th>
+                                        <th>Род. категория</th>
+                                        <th>Действие</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                 {% for category in categories %}
+                                <tr>
+                                   <td> {{ category.pk }} </td>
+                                    <td>{{ category.name }} </td>
+                                    <td>  {% if category.parent %}
+                                         {{ category.parent.name }}
+        {% else %}
+            None
+        {% endif %}</td>
+                                    <td>
+                                        <div class="dropdown">
+                                                <span class="bx bx-dots-horizontal-rounded font-medium-3 dropdown-toggle nav-hide-arrow cursor-pointer" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="menu">
+                                                </span>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item" href="{% url 'company-category-edit' category.pk %}"><i class="bx bx-edit-alt mr-1"></i> Править</a>
+                                                </div>
+                                            </div>
+                                    </td>
+                                </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- datatable ends -->
+                    </div>
+                </section>
+                <!-- table success ends -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Content-->
+
+
+    </div>
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+    <!-- BEGIN: Footer-->
+    {% block footer %}
+    {% include 'admin_panel/footerFORM.html' %}
+    {% endblock footer %}
+    <!-- END: Footer-->
+
+    {% block jsLoader %}
+    {% include 'admin_panel/jsLoader.html' %}
+    {% endblock jsLoader %}
+
+</body>
+<!-- END: Body-->
+
+</html>

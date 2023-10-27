@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block cssLoader %}
+    {% include 'front/cssloader.html' %}
+    {% endblock %}
+    <title></title>
+</head>
+<body class="main-page">
+
+
+{% block header %}
+{% include 'front/headerForm.html' %}
+{% endblock %}
+
+
+<section>
+    <div class="container">
+        <br><br><br><br><br><br><br><br><br><br>
+    </div>
+</section>
+
+    {% block footer %}
+    {% include 'front/footerForm.html' %}
+    {% endblock footer %}
+
+{% block jsLoad %}
+{% include 'front/jsLoader.html' %}
+{% endblock jsLoad %}
+
+    {% if error == 0 %}
+    <script>
+    $('#subscribe-modal').modal('show')
+    </script>
+    {% endif %}
+
+</body>
+</html>
+

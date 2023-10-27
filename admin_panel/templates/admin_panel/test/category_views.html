@@ -1,0 +1,32 @@
+{% for category in categories %}
+    <p>
+        pk:{{ category.pk }},
+        name:{{ category.name }},
+        parent:
+        {% if category.parent %}
+            {{ category.parent.name }}
+        {% else %}
+            None
+        {% endif %}
+    </p>
+{% endfor %}
+
+
+<br/>
+c
+<form action="{% url 'company-category' %}" method="POST">
+    {% csrf_token %}
+    {{ error }}
+    <select name="parent_id" data-live-search="true">
+        <option value="0">
+            None
+        </option>
+        {% for category in categories %}
+            <option value="{{ category.pk }}">
+                {{ category.name }}
+            </option>
+        {% endfor %}
+    </select>
+    <input type="text" name="name">
+    <button type="submit">Submit</button>
+</form>

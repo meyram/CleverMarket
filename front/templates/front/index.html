@@ -1,0 +1,254 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block cssLoader %}
+    {% include 'front/cssloader.html' %}
+    {% endblock %}
+    <title></title>
+</head>
+<body class="main-page">
+
+
+{% block header %}
+{% include 'front/headerForm.html' %}
+{% endblock %}
+
+
+
+
+<section id="main-banner">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7 col-12">
+                <h1>Онлайн сервис по поиску строительных компаний в Казахстане</h1>
+                <p>{{ request.session.favourites }}</p>
+            </div>
+            <div class="col-12">
+                <div class="main-banner-form">
+                    <form action="{% url 'Catalog' %}">
+                        <div class="row">
+                          <div class="col">
+                            <input type="text" class="form-control" placeholder="Я хочу найти..." required name="search">
+                          </div>
+                          <div class="col d-md-block d-none">
+                            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect1" name="filter-category">
+                                {% for category in filteredcategories %}
+                                    <option value="{{ category.pk }}">
+                                {{ category.name }}
+                                    </option>
+                                {% endfor %}
+                              </select>
+                          </div>
+                          <div class="col d-md-block d-none">
+                            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="city">
+
+                                {% for city in cities %}
+                                <option value="{{city.city_name}}">{{city.city_name}}</option>
+                                {% endfor %}
+                              </select>
+                          </div>
+                          <div class="col-auto">
+                            <button type="submit" class="button">Поиск</button>
+                          </div>
+                        </div>
+                      </form>
+                </div>
+            </div>
+        </div>
+        
+
+        
+    </div>
+</section>
+
+
+
+
+
+<section id="main-product">
+    <div class="container">
+        <div class="view1 product-div">
+              {% for company in companies %}
+             {% if company.status == company.StatusChoices.ACCEPTED %}
+             {% if company.tarifes.get %}
+               {%for tarif in company.tarifes.all%}
+               {% if tarif.tarif.name == 'PREMIUM' %}
+               <div class="product-item premium " data-tilt data-tilt-perspective="5000">
+               {% elif tarif.tarif.name == 'STANDART' %}
+               <div class="product-item " data-tilt data-tilt-perspective="5000">
+               {% else %}
+               <div class="product-item " data-tilt data-tilt-perspective="5000">
+            {% endif %}
+            {% endfor %}
+               {% else %}
+               <div class="product-item " data-tilt data-tilt-perspective="5000">
+            {% endif %}
+                <a href="{% url 'Catalog-item' company.pk %}" class="product-img">
+
+                    <img src="media/{{ company.files.picture }}" onerror="this.onerror=null;this.src='{% static 'front/img/product/1.png' %}';" alt="">
+                </a>
+                <div class="product-body">
+                    <a href="{% url 'Catalog-item' company.pk %}" class="product-name">{{ company.info.name }} </a>
+                    <a href="{% url 'Catalog-item' company.pk %}" class="product-cotegory">  {% for company_category in company.categories.all %}
+                             {{ company_category.category.name }}
+                    {% endfor %}</a>
+                    <!-- макс сим. - 100 -->
+                    <p class="product-desc">{{ company.info.short_description }}</p>
+                </div>
+                <div class="product-footer">
+                    <a href="{% url 'Catalog-item' company.pk %}" class="button">Подробнее</a>
+                    <button class="like-btn favorite {% for item in request.session.favourites %}{% if item.id == company.pk|stringformat:"i" %} active {% endif %} {% endfor %}"
+                            id="{{company.pk}}" value="{{company.pk}}">
+                        <img src="{% static 'front/img/icons/favourite.svg' %}" class="no-active">
+                        <img src="{% static 'front/img/icons/favourite1.svg' %}" class="active">
+                    </button>
+                </div>
+            </div>
+            {% endif %}
+               {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+<section id="main-about">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-12">
+                <h2>О сервисе</h2>
+
+                <p class="text">Это текст о компании. Он необходим для дальнейшего продвижения Вашего сайта. Вам будет необходимо предоставить исходные данные, по которым наши копирайтеры составят правильный текст, который будет содержать в себе основную информацию о деятельности Вашей компании. Этот текст будет заменен на новый подходящий текст. Текст будет заменен на новый подходящий текст. Здесь будет мини-описание.Это текст о компании. Он необходим для дальнейшего продвижения Вашего сайта. Вам будет необходимо предоставить исходные данные, по которым наши копирайтеры составят правильный текст, который будет содержать в </p>
+            </div>
+
+            <div class="col-md-4 col-12">
+                <div class="main-about-video">
+
+                </div>
+            </div>
+
+            <div class="col-md-4 col-12">
+                <div class="main-about-adv">
+                    <div class="main-about-adv-item">
+                        <div class="main-about-adv-img">
+                            <img src="{% static 'front/img/icons/fb.svg' %}" alt="">
+                        </div>
+                        <div class="main-about-adv-text">
+                            <p class="text">Это текст о компании. Он необходим для дальнейшего продвижения</p>
+                        </div>
+                    </div>
+                    <div class="main-about-adv-item">
+                        <div class="main-about-adv-img">
+                            <img src="{% static 'front/img/icons/fb.svg' %}" alt="">
+                        </div>
+                        <div class="main-about-adv-text">
+                            <p class="text">Это текст о компании. Он необходим для дальнейшего продвижения</p>
+                        </div>
+                    </div>
+                    <div class="main-about-adv-item">
+                        <div class="main-about-adv-img">
+                            <img src="{% static 'front/img/icons/fb.svg' %}" alt="">
+                        </div>
+                        <div class="main-about-adv-text">
+                            <p class="text">Это текст о компании. Он необходим для дальнейшего продвижения</p>
+                        </div>
+                    </div>
+                    <div class="main-about-adv-item">
+                        <div class="main-about-adv-img">
+                            <img src="{% static 'front/img/icons/fb.svg' %}" alt="">
+                        </div>
+                        <div class="main-about-adv-text">
+                            <p class="text">Это текст о компании. Он необходим для дальнейшего продвижения</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="main-company">
+    <div class="container">
+        <h2>Для компаний</h2>
+
+        <p class="text">Это текст о компании. Он необходим для дальнейшего продвижения Вашего сайта. Вам будет необходимо предоставить исходные данные, по которым наши копирайтеры составят правильный текст, который будет содержать в себе основную информацию</p>
+
+        <a href="{% url 'for-members' %}" class="button">Подробнее</a>
+    </div>
+</section>
+
+
+
+
+
+<section id="main-news">
+
+    <div class="main-news-div">
+         {% for n in News %}
+        <a href="{% url 'news-item' n.pk %}" class="main-news-item">
+            <img src="media/{{ n.img }}" alt="">
+            <div class="main-news-info">
+                <p class="title">{{ n.title }}</p>
+                <p class="desc">{{ n.date }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+</section>
+
+
+
+    {% block footer %}
+    {% include 'front/footerForm.html' %}
+    {% endblock footer %}
+
+{% block jsLoad %}
+{% include 'front/jsLoader.html' %}
+{% endblock jsLoad %}
+<script>
+
+
+$(".favorite").click( function() {
+    var id = $(this).attr("id");
+    if ($(this).hasClass("active")) {
+         $(this).removeClass("active");
+         $.ajax({
+            type: "POST",
+            url: "{% url 'favourites-remove' %}",
+            data: {
+                "type": "Company",
+                "url_from": "{{request.path}}",
+                "id": id,
+                "csrfmiddlewaretoken": "{{ csrf_token }}",
+            },
+
+        });
+    }
+    else{
+       $(this).addClass("active");
+        $.ajax({
+            type: "POST",
+            url: "{% url 'favourites-add' %}",
+            data: {
+                "type": "Company",
+                "url_from": "{{request.path}}",
+                "id": id,
+                "csrfmiddlewaretoken": "{{ csrf_token }}",
+            },
+
+        });
+    }
+
+})
+</script>
+    {% if error == 0 %}
+    <script>
+    $('#subscribe-modal').modal('show')
+    </script>
+    {% endif %}
+</body>
+</html>

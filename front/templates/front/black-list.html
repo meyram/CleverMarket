@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block cssLoader %}
+    {% include 'front/cssloader.html' %}
+    {% endblock %}
+    <title></title>
+</head>
+
+<!-- тут важный класс для черного списка! -->
+<body class="black-list">
+
+{% block header %}
+{% include 'front/headerForm.html' %}
+{% endblock %}
+
+<section>
+    <div class="container">
+        <h3 class="text-white">Черный список компаний</h3>
+        <p class="text text-white">Это текст о компании. Он необходим для дальнейшего продвижения Вашего сайта. Вам будет Он необходим для дальнейшего продвижения Вашего сайта...</p>
+        <div class="view2 product-div">
+            {% for company in companies %}
+            {% if company.status == company.StatusChoices.BANNED %}
+            <div class="product-item" data-tilt data-tilt-perspective="5000">
+                <div class="product-img">
+                    <img src="{% static 'front/img/product/1.png' %}" alt="">
+                </div> 
+                <div class="product-body">
+                    <p class="product-name">{{ company.info.name }}</p>
+                    <p class="product-cotegory">{% for company_category in company.categories.all %}
+                     {{ company_category.category.name }}
+                     {% endfor %}
+                    </p>
+                    <!-- макс сим. - 200 -->
+                    <p class="product-desc">{{ company.info.short_description }}</p>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+
+    {% block footer %}
+    {% include 'front/footerForm.html' %}
+    {% endblock footer %}
+
+
+
+
+
+{% block jsLoad %}
+{% include 'front/jsLoader.html' %}
+{% endblock jsLoad %}
+
+</body>
+</html>

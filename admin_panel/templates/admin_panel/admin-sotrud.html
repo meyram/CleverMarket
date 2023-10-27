@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="Frest admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Frest admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <title>Users List - Frest - Bootstrap HTML admin template</title>
+
+      {% block cssLoader %}
+    {% include 'admin_panel/cssLoader.html' %}
+    {% endblock cssLoader %}
+
+</head>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+
+<body class="vertical-layout vertical-menu-modern semi-dark-layout 2-columns  navbar-sticky footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" data-layout="semi-dark-layout">
+
+     <!-- BEGIN: Header-->
+    {% block content %}
+    {% include 'admin_panel/headerFORM.html' %}
+    {% endblock %}
+    <!-- END: Header-->
+
+
+    <!-- BEGIN: Main Menu-->
+    {% block menu %}
+    {% include 'admin_panel/mainMenuFORM.html' %}
+    {% endblock menu %}
+   <!-- END: Main Menu-->
+
+    <!-- BEGIN: Content-->
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+            </div>
+            <div class="content-body">
+                <!-- users list start -->
+                <section class="users-list-wrapper">
+                    <div class="users-list-table">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <!-- datatable start -->
+                                    <div class="table-responsive">
+                                        <table id="users-list-datatable" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>id</th>
+                                                    <th>Логин</th>
+                                                    <th>Имя</th>
+                                                    <th>Дата рег.</th>
+                                                    <th>Роль</th>
+                                                    <th>Статус</th>
+                                                    <th>Править</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for card in cards %}
+                                                <tr>
+                                                    <td>{{ card.pk }}</td>
+                                                    <td><a href="{% url 'employee-edit' card.pk %}">{{ card.owner.username }}</a>
+                                                    </td>
+                                                    <td>{{ card.owner.first_name }}</td>
+                                                    <td>{{ card.owner.date_joined }}</td>
+                                                    <td>{{ card.role }}</td>
+
+                                                    {% if card.status == card.StatusChoices.ACTIVE %}
+                                                    <td><span class="badge badge-light-success">{{ card.status }}</span></td>
+                                                    {% else %}
+                                                    <td><span class="badge badge-light-danger">{{ card.status }}</span></td>
+                                                    {% endif %}
+
+                                                    <td><a href="{% url 'employee-edit' card.pk %}"><i class="bx bx-edit-alt"></i></a></td>
+                                                </tr>
+                                               {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- datatable ends -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- users list ends -->
+            </div>
+        </div>
+    </div>
+    <!-- END: Content-->
+
+    </div>
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+    <!-- BEGIN: Footer-->
+     {% block footer %}
+     {% include 'admin_panel/footerFORM.html' %}
+     {% endblock footer %}
+    <!-- END: Footer-->
+
+
+
+    {% block jsLoader %}
+    {% include 'admin_panel/jsLoader.html' %}
+    {% endblock jsLoader %}
+
+</body>
+<!-- END: Body-->
+
+</html>

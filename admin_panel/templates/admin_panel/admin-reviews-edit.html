@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="Frest admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Frest admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <title>Users Edit - Frest - Bootstrap HTML admin template</title>
+
+    {% block cssLoader %}
+    {% include 'admin_panel/cssLoader.html' %}
+    {% endblock cssLoader %}
+
+</head>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+
+<body class="vertical-layout vertical-menu-modern semi-dark-layout 2-columns  navbar-sticky footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" data-layout="semi-dark-layout">
+
+      <!-- BEGIN: Header-->
+    {% block content %}
+    {% include 'admin_panel/headerFORM.html' %}
+    {% endblock %}
+    <!-- END: Header-->
+
+
+    <!-- BEGIN: Main Menu-->
+    {% block menu %}
+    {% include 'admin_panel/mainMenuFORM.html' %}
+    {% endblock menu %}
+   <!-- END: Main Menu-->
+
+    <!-- BEGIN: Content-->
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+            </div>
+            <div class="content-body">
+                <!-- users edit start -->
+                <section class="users-edit">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="tab-pane active fade show" id="account" aria-labelledby="account-tab" role="tabpanel">
+
+                                        <!-- users edit account form start -->
+                                        <form action="{% url 'review-edit' Reviews.pk %}" method="post">
+                                            {% csrf_token %}
+                                         <input type="hidden" name="form" value="edit">
+                                            {% if error %}
+                                                {{ error }}
+                                                 {% if error == 0 %}
+                                                 <p>Вы успешно зарегистрировались</p>
+                                                 {% elif error == 1 %}
+                                                 <p>Такой пользователь уже существтует</p>
+                                                 {% elif error == 2 %}
+                                                 <p>Пароли не совпадают</p>
+
+                                            {% endif %}
+                                            {% endif %}
+                                            <div class="row">
+                                                <div class="col-12 col-sm-6">
+                                                    <div class="form-group">
+                                                        <div class="controls">
+                                                            <label>Имя</label>
+                                                            <input type="text" class="form-control" name="name" placeholder="Имя" value="{{ Reviews.name }}" required data-validation-required-message="Логин обязательно">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="controls">
+                                                            <label>Email</label>
+                                                            <input type="text" class="form-control" name="email" placeholder="Email" value="{{Reviews.email}}" required data-validation-required-message="Имя обязательно">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="controls">
+                                                            <label>Текст</label>
+                                                            <textarea type="text" class="form-control" name="review" placeholder="Текст"  required data-validation-required-message="Фамилия обязательно">{{ Reviews.review }}</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6">
+                                               <div class="form-group">
+                                                        <label>Статус</label>
+                                                        <select class="form-control" name="status">
+                                                            <option value="0" {% if Reviews.status == Reviews.StatusChoices.ACTIVE %} selected {% endif %}>Активный</option>
+                                                            <option value="1" {% if Reviews.status == Reviews.StatusChoices.DELETED %} selected {% endif %}>Удаленный</option>
+                                                            <option value="2" {% if Reviews.status == Reviews.StatusChoices.PENDING %} selected {% endif %}>Ожидание</option>
+                                                        </select>
+                                               </div>
+                                                <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
+                                                    <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1">Сохранить</button>
+                                                    <a type="reset" class="btn btn-light" href="{% url 'reviews' %}">Закрыть</a>
+                                                    <button type="button" class="btn btn-danger mb-1" data-toggle="modal" data-target="#deleteForm"> Удалить отзыв </button>
+                                                </div>
+                                              </div>
+                                            </div>
+                                        </form>
+                                        <form action="{% url 'review-edit' Reviews.pk %}" method="post" id="delete-rev">
+                                                                {% csrf_token %}
+                                                                 <input type="hidden" name="form" value="delete">
+                                                        </form>
+                                        <!-- users edit account form ends -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- users edit ends -->
+            </div>
+        </div>
+    </div>
+    <!-- END: Content-->
+
+
+<div class="modal text-left" id="deleteForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+
+              <div class="modal-body">
+                  <div class="swal2-icon swal2-warning swal2-animate-warning-icon" style="display: flex;"><span class="swal2-icon-text">!</span></div>
+                  <h4 class="modal-title text-center" >Вы действительно хотите удалить отзыв?</h4>
+                  <p class="text text-center">Данное действие невозможно отменить.</p>
+              <div class="mt-2 d-flex flex-sm-row flex-column justify-content-center">
+                <a type="reset" class="btn btn-light mb-1 mr-sm-1 text-white" data-dismiss="modal" aria-label="Close">Закрыть</a>
+               <input type="submit" class="btn btn-outline-danger ml-1" form="delete-rev" value="Удалить отзыв">
+              </div>
+              </div>
+
+          </div>
+        </div>
+      </div>
+
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+
+     <!-- BEGIN: Footer-->
+     {% block footer %}
+     {% include 'admin_panel/footerFORM.html' %}
+     {% endblock footer %}
+    <!-- END: Footer-->
+
+
+
+    {% block jsLoader %}
+    {% include 'admin_panel/jsLoader.html' %}
+    {% endblock jsLoader %}
+
+</body>
+<!-- END: Body-->
+
+</html>

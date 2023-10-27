@@ -1,0 +1,14 @@
+<p>Owner: {{ company.owner }}</p>
+<p>Name: {{ company.info.name }}</p>
+<p>Short description: {{ company.info.short_description }}</p>
+<p>Description: {{ company.info.description }}</p>
+<p>Categories:
+<ul>
+    {% for company_category in company.categories.all %}
+        <li>
+            {{ company_category.category.name }}
+        </li>
+    {% endfor %}
+</ul>
+</p>
+

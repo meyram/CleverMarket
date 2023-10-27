@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+    <!-- BEGIN: Head-->
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
+        <meta name="description" content="Frest admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities." />
+        <meta name="keywords" content="admin template, Frest admin template, dashboard template, flat admin template, responsive admin template, web app" />
+        <meta name="author" content="PIXINVENT" />
+        <title>Register Page - Frest - Bootstrap HTML admin template</title>
+
+    {% block cssLoader %}
+    {% include 'admin_panel/cssLoader.html' %}
+    {% endblock cssLoader %}
+    </head>
+    <!-- END: Head-->
+
+    <!-- BEGIN: Body-->
+
+    <body class="vertical-layout vertical-menu-modern semi-dark-layout 1-column navbar-sticky footer-static" data-open="click" data-menu="vertical-menu-modern" data-col="1-column" data-layout="semi-dark-layout">
+        <!-- BEGIN: Content-->
+        <div class="app-content content">
+            <div class="content-overlay"></div>
+            <div class="content-wrapper">
+                <div class="content-header row"></div>
+                <div class="content-body">
+                    <!-- register section starts -->
+                    <section class="row flexbox-container justify-content-center pb-3">
+                        <div class="col-md-8 col-12">
+                            <div class="card mb-0">
+
+                                    <div class="row m-0 py-3">
+                                        <!-- register section left -->
+                                        <div class="col-md-12 col-12 px-md-3 px-1">
+                                            <div class="card">
+                                                <div class="card-header pb-1">
+                                                    <div class="card-title">
+                                                        <h4 class="text-center">Верификация Email</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 col-12 px-md-3 px-1">
+                                            <div class="row">
+                                                <div class="col-md-12 col-12" id="ver-code-div" >
+                                                    <form action="{% url 'verification' companypk %}" method="post" >
+                                                        {% csrf_token %}
+                                                    <div class="form-group mb-50">
+                                                        <label for="VerificationCode">Код верификации</label>
+                                                        <p>На указанную почту отправили код верификации, вставьте его ниже</p>
+                                                        <div class="position-relative has-icon-left">
+                                                            <input type="password" name="code" id="pass-icon" class="form-control" name="contact-icon" placeholder="Код для подтверждения">
+
+                                                            <div class="form-control-position">
+                                                              <i class="bx bx-lock"></i>
+                                                            </div>
+                                                            {% if error == 1 %}
+                                                               <div class="help-block"><ul role="alert"><li>Неверный код верификации</li></ul></div>
+                                                            {% endif %}
+                                                            <br>
+                                                            <button type="submit" onclick=""  class="btn btn-primary glow position-relative w-100">Подтвердить<i class="bx bx-right-arrow-alt"></i></button>
+                                                        </div>
+
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- register section endss -->
+                </div>
+            </div>
+        </div>
+        <!-- END: Content-->
+
+
+
+    {% block jsLoader %}
+    {% include 'admin_panel/jsLoader.html' %}
+    {% endblock jsLoader %}
+    </body>
+    <!-- END: Body-->
+</html>

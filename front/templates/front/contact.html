@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block cssLoader %}
+    {% include 'front/cssloader.html' %}
+    {% endblock %}
+    <title></title>
+</head>
+<body>
+
+{% block header %}
+{% include 'front/headerForm.html' %}
+{% endblock %}
+
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-12">
+                <h3>Наши контакты</h3>
+
+                <p class="contact-label">Адрес:</p>
+                <p class="text">г.Нур-Султан, улица Бейбитшилик 14,</p>
+
+                <p class="contact-label">Email:</p>
+                <p class="text">г.Нур-Султан, улица Бейбитшилик 14,</p>
+
+                <p class="contact-label">Телефоны:</p>
+                <p class="text">8 705 781 88 33</p>
+                <p class="text">8 705 781 88 33</p>
+
+                <p class="contact-label">Подписывайтесь на нас:</p>
+                <div class="contact-soc-div">
+                    <a href=""><img src="{% static 'img/icons/contact-1.svg' %}" alt=""></a>
+                    <a href=""><img src="{% static 'img/icons/contact-2.svg' %}" alt=""></a>
+                    <a href=""><img src="{% static 'img/icons/contact-3.svg' %}" alt=""></a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-12">
+                <h3>Оставить заявку</h3>
+
+                <form action="{% url 'mailer' %}"  method="post" class="contact-page-form def-form">
+                    {% csrf_token %}
+                 <input type="hidden" name="form" value="call_request">
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            <label for="name">Имя</label>
+                            <input type="text" required="" name="name" placeholder="Напишите ваше имя">
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <label for="phone">Телефон</label>
+                            <input type="text" required="" name="phone" placeholder="Напишите ваш телефон">
+                        </div>
+                        <div class="col-md-12 col-12">
+                            <label for="email">Email</label>
+                            <input type="email" required="" name="email" placeholder="Напишите ваш email">
+                        </div>
+                        <div class="col-md-12 col-12">
+                            <label for="message">Комментарии</label>
+                            <textarea name="text" id="" rows="5" placeholder="Ваш комметарии"></textarea>
+                        </div>
+                        <div class="col-md-12 col-12">
+                            <button type="submit" class="button">Отправить</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="main-company">
+    <div class="container">
+        <h2>Для компаний</h2>
+
+        <p class="text">Это текст о компании. Он необходим для дальнейшего продвижения Вашего сайта. Вам будет необходимо предоставить исходные данные, по которым наши копирайтеры составят правильный текст, который будет содержать в себе основную информацию</p>
+
+        <a href="{% url 'for-members' %}" class="button">Подробнее</a>
+    </div>
+</section>
+
+
+{% block footer %}
+{% include 'front/footerForm.html' %}
+{% endblock footer %}
+
+
+
+
+
+{% block jsLoad %}
+{% include 'front/jsLoader.html' %}
+{% endblock jsLoad %}
+</body>
+</html>

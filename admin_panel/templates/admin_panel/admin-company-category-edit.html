@@ -1,0 +1,309 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="Frest admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Frest admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <title>Users List - Frest - Bootstrap HTML admin template</title>
+
+    {% block cssLoader %}
+    {% include 'admin_panel/cssLoader.html' %}
+    {% endblock cssLoader %}
+
+</head>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+
+<body class="vertical-layout vertical-menu-modern semi-dark-layout 2-columns  navbar-sticky footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" data-layout="semi-dark-layout">
+
+    <!-- BEGIN: Header-->
+    {% block content %}
+    {% include 'admin_panel/headerFORM.html' %}
+    {% endblock %}
+    <!-- END: Header-->
+
+
+        <!-- BEGIN: Main Menu-->
+    {% block menu %}
+    {% include 'admin_panel/mainMenuFORM.html' %}
+    {% endblock menu %}
+   <!-- END: Main Menu-->
+
+
+    <!-- BEGIN: Content-->
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+            </div>
+            <div class="content-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Изменить категорию</h4>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal form repeater-default" action="{% url 'company-category-edit' category.pk %}" method="POST">
+                                                {% csrf_token %}
+                                                {{ error }}
+                                              <input type="hidden" name="form" value="edit">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Название</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" id="first-name" class="form-control" name="name" value="{{ category.name }}">
+                                                    </div>
+
+                                                    <div class="col-md-4">
+                                                        <label>Родительская категория </label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                            <select class="form-control" id="accountSelect"  name="parent_id" >
+                                                                 <option value="{{category.parent.pk}}" >
+                                                                    Текущий: {{category.parent}}
+                                                                </option>
+                                                        {% for category in parents %}
+                                                            <option value="{{ category.pk }}">
+                                                                {{ category.name }}
+                                                            </option>
+
+                                                        {% endfor %}
+                                                            </select>
+                                                    </div>
+                                                    <hr>
+                                                      <div class="col-12 d-flex flex-sm-row flex-column justify-content-end">
+                                                        <button type="submit" class="btn btn-primary glow mr-sm-1 mb-1">Сохранить</button>
+                                                        <a href="{% url 'company-category' %}" class="btn btn-light mr-sm-1  mb-1">Закрыть</a>
+                                                       <button type="button" class="btn btn-danger mb-1" data-toggle="modal" data-target="#deleteForm"> Удалить категорию</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <form class="form form-horizontal form repeater-default" action="{% url 'company-category-edit' category.pk %}" method="POST">
+                                                {% csrf_token %}
+                                              <input type="hidden" name="form" value="property-add">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Название</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" id="property-name" class="form-control" name="property">
+                                                    </div>
+                                                    <hr>
+                                                      <div class="col-12 d-flex flex-sm-row flex-column justify-content-end">
+                                                        <button type="submit" class="btn btn-primary glow mr-sm-1 mb-1">Добавить</button>
+                                                      </div>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                         <table id="services-list-datatable" class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Название характеристики</th>
+                                                                <th>Изменить</th>
+                                                                <th>Удалить</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                              {% for property in properties %}
+                                                               <tr>
+                                                                <td>{{ property.name }}</td>
+                                                                   <td><button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#inlineForm{{property.pk}}">
+                                                                    Изменить
+                                                                  </button></td>
+                                                                   <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteFormProp{{property.pk}}">Удалить</button></td>
+                                                               </tr>
+                                                              {% endfor %}
+                                                                {% for ct in properties %}
+                                                                    <form action="{% url 'category-property-edit' ct.pk %}" method="post" id="delete-prop{{ct.pk}}">
+                                                                    {% csrf_token %}
+                                                                     <input type="hidden" name="property_pk" value="{{prp.pk}}">
+                                                                     <input type="hidden" name="form" value="property_delete">
+                                                                        <input type="hidden" name="cat_pk" value="{{category.pk}}">
+                                                                    </form>
+                                                              {% endfor %}
+                                                         {% for prp in properties %}
+                                        <div class="modal fade text-left" id="inlineForm{{prp.pk}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" style="display: none;" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                          <div class="modal-content">
+                                                            <div class="modal-header">
+                                                              <h4 class="modal-title" id="myModalLabel33">Изменение {{prp.pk}} </h4>
+                                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <i class="bx bx-x"></i>
+                                                              </button>
+                                                            </div>
+                                                              <form action="{% url 'category-property-edit' prp.pk %}" method="post" enctype="multipart/form-data">
+                                                                     {% csrf_token %}
+                                                                 <input type="hidden" name="cat_pk" value="{{category.pk}}">
+                                                                  <input type="hidden" name="property_pk" value="{{prp.pk}}">
+                                                                  <input type="hidden" name="form" value="property_edit">
+                                                              <div class="modal-body">
+                                                                <label>Название:</label>
+                                                                <div class="form-group">
+                                                                  <input type="text" placeholder="Название" class="form-control" name="name" value="{{prp.name}}">
+                                                                </div>
+                                                              </div>
+                                                              <div class="modal-footer">
+                                                                <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                                                                  <i class="bx bx-x d-block d-sm-none"></i>
+                                                                  <span class="d-none d-sm-block">Закрыть</span>
+                                                                </button>
+                                                                <button type="submit" class="btn btn-primary ml-1">Отправить</button>
+                                                              </div>
+                                                            </form>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                {% endfor %}
+                                                        </tbody>
+                                                      </table>
+                                        <form action="{% url 'company-category-edit' category.pk %}" method="post" id="delete-cat">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" name="form" value="delete">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Content-->
+
+    <!-- demo chat-->
+    <div class="widget-chat-demo">
+        <!-- widget chat demo footer button start -->
+        <button class="btn btn-primary chat-demo-button glow px-1"><i class="livicon-evo" data-options="name: comments.svg; style: lines; size: 24px; strokeColor: #fff; autoPlay: true; repeat: loop;"></i></button>
+        <!-- widget chat demo footer button ends -->
+        <!-- widget chat demo start -->
+        <div class="widget-chat widget-chat-demo d-none">
+            <div class="card mb-0">
+                <div class="card-header border-bottom p-0">
+                    <div class="media m-75">
+                        <a href="JavaScript:void(0);">
+                            <div class="avatar mr-75">
+                                <img src="{% static 'admin_panel/app-assets/images/portrait/small/avatar-s-2.jpg' %} " alt="avtar images" width="32" height="32">
+                                <span class="avatar-status-online"></span>
+                            </div>
+                        </a>
+                        <div class="media-body">
+                            <h6 class="media-heading mb-0 pt-25"><a href="javaScript:void(0);">Kiara Cruiser</a></h6>
+                            <span class="text-muted font-small-3">Active</span>
+                        </div>
+                        <i class="bx bx-x widget-chat-close float-right my-auto cursor-pointer"></i>
+                    </div>
+                </div>
+                <div class="card-body widget-chat-container widget-chat-demo-scroll">
+                    <div class="chat-content">
+                        <div class="badge badge-pill badge-light-secondary my-1">today</div>
+                        <div class="chat">
+                            <div class="chat-body">
+                                <div class="chat-message">
+                                    <p>How can we help? 😄</p>
+                                    <span class="chat-time">7:45 AM</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat chat-left">
+                            <div class="chat-body">
+                                <div class="chat-message">
+                                    <p>Hey John, I am looking for the best admin template.</p>
+                                    <p>Could you please help me to find it out? 🤔</p>
+                                    <span class="chat-time">7:50 AM</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat">
+                            <div class="chat-body">
+                                <div class="chat-message">
+                                    <p>Stack admin is the responsive bootstrap 4 admin template.</p>
+                                    <span class="chat-time">8:01 AM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer border-top p-1">
+                    <form class="d-flex" onsubmit="widgetChatMessageDemo();" action="javascript:void(0);">
+                        <input type="text" class="form-control chat-message-demo mr-75" placeholder="Type here...">
+                        <button type="submit" class="btn btn-primary glow px-1"><i class="bx bx-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- widget chat demo ends -->
+<div class="modal text-left" id="deleteForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+
+              <div class="modal-body">
+                  <div class="swal2-icon swal2-warning swal2-animate-warning-icon" style="display: flex;"><span class="swal2-icon-text">!</span></div>
+                  <h4 class="modal-title text-center" >Вы действительно хотите удалить катагоерию?</h4>
+                  <p class="text text-center">Данное действие невозможно отменить.</p>
+              <div class="mt-2 d-flex flex-sm-row flex-column justify-content-center">
+                <a type="reset" class="btn btn-light mb-1 mr-sm-1 text-white" data-dismiss="modal" aria-label="Close">Закрыть</a>
+                  <input type="submit" class="btn btn-danger mb-1" form="delete-cat" value="Удалить категорию">
+            </div>
+              </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+
+    {% for p in properties %}
+    <div class="modal text-left" id="deleteFormProp{{p.pk}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+
+              <div class="modal-body">
+                  <div class="swal2-icon swal2-warning swal2-animate-warning-icon" style="display: flex;"><span class="swal2-icon-text">!</span></div>
+                  <h4 class="modal-title text-center" >Вы действительно хотите удалить характеристику?</h4>
+                  <p class="text text-center">Данное действие невозможно отменить.</p>
+              <div class="mt-2 d-flex flex-sm-row flex-column justify-content-center">
+                <a type="reset" class="btn btn-light mb-1 mr-sm-1 text-white" data-dismiss="modal" aria-label="Close">Закрыть</a>
+               <input type="submit" class="btn btn-danger mb-1" form="delete-prop{{p.pk}}" value="Удалить город">
+              </div>
+              </div>
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+
+    <!-- BEGIN: Footer-->
+   {% block footer %}
+    {% include 'admin_panel/footerFORM.html' %}
+    {% endblock footer %}
+    <!-- END: Footer-->
+
+
+
+    {% block jsLoader %}
+    {% include 'admin_panel/jsLoader.html' %}
+    {% endblock jsLoader %}
+
+</body>
+<!-- END: Body-->
+
+</html>

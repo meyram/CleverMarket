@@ -1,0 +1,6 @@
+<form action="{% url 'company-category-add' %}" method="POST">
+    {% csrf_token %}
+    {{ error }}
+    <input type="text" name="name">
+    <button type="submit">Submit</button>
+</form>

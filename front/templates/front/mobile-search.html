@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block cssLoader %}
+    {% include 'front/cssloader.html' %}
+    {% endblock %}
+    <title></title>
+</head>
+<body class="main-page">
+
+{% block header %}
+{% include 'front/headerForm.html' %}
+{% endblock %}
+
+<section id="main-banner">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7 col-12">
+
+                <img src="{% static 'front/Downloads/ver-3/img/logo-yellow.svg' %}" alt="" class="mobile-search-logo">
+
+                <h1>Введите в поиск название компании или сферу деятельности </h1>
+            </div>
+            <div class="col-12">
+                <div class="main-banner-form">
+                    <form action="{% url 'Catalog' %}">
+                        <div class="row">
+                          <div class="col">
+                            <input type="text" class="form-control" name="search" placeholder="Я хочу найти..." required>
+                          </div>
+                          <div class="col d-md-block d-none">
+                            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect1">
+                                {% for category in filteredcategories %}
+                                    <option value="{{ category.pk }}">
+                                {{ category.name }}1
+                                    </option>
+                                {% endfor %}
+                              </select>
+                          </div>
+                          <div class="col d-md-block d-none">
+                            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+
+                                {% for company in companycities %}
+                                <option value="{{company}}">{{company}}</option>
+                                {% endfor %}
+                              </select>
+                          </div>
+                          <div class="col-auto">
+                            <button type="submit" class="button">Поиск</button>
+                          </div>
+                        </div>
+                      </form>
+                </div>
+            </div>
+        </div>
+        
+
+        
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+{% block jsLoad %}
+{% include 'front/jsLoader.html' %}
+{% endblock jsLoad %}
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+
+{{ balance.value }}
+<button type="button" id="reload">
+    Обновить
+</button>
+
+<br/>
+<br/>
+
+<input id="value" type="number" value="100">
+<button type="button" id="pay">
+    Пополнить
+</button>
+
+<br/>
+
+{% for invoice in history %}
+    <br/>
+    date: {{ invoice.date }}
+    value: {{ invoice.value }}
+    status: {{ invoice.status }}
+    reason: {{ invoice.reason }}
+{% endfor %}
+
+
+<script src="https://widget.cloudpayments.ru/bundles/cloudpayments"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    var pay = async function () {
+        var minValue = 100;
+        var value = parseFloat(document.getElementById('value').value);
+        value = value | 0;
+        if(value < minValue){
+            alert("Минимальное значение" + minValue);
+            return;
+        }
+        var invoiceId = null;
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'invoice' %}",
+            async: false,
+            data: {
+                'value': value,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function (response) {
+                invoiceId = response['invoice_id']
+            },
+        });
+        var widget = new cp.CloudPayments();
+        widget.charge(
+            {
+                publicId: 'pk_69ca9f19c6ea45ce23b28052bec43',
+                description: 'Оплата в topbuild',
+                amount: value,
+                invoiceId: invoiceId,
+                currency: "KZT",
+                skin: "mini",
+            },
+            function (options) {
+            },
+            function (reason, options) {
+            }
+        );
+    };
+    var reload = function () {
+        location.reload();
+    };
+    $(document).on('click', '#pay', function (e) {
+        pay();
+    });
+    $(document).on('click', '#reload', function (e) {
+        reload();
+    });
+</script>
+

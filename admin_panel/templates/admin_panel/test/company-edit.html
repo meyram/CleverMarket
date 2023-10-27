@@ -1,0 +1,35 @@
+<form action="{% url 'company-testedit' company.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="form" value="info">
+    <input type="text" name="name" placeholder="Name" value="{{ company.info.name }}">
+    <input type="text" name="description" placeholder="Decription" value="{{ company.info.description }}">
+    <input type="text" name="short_description" placeholder="Short Description" value="{{ company.info.short_description }}">
+    <button type="submit">Сохранить</button>
+</form>
+
+<hr/>
+
+<form action="{% url 'company-testedit' company.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="form" value="category">
+    <select name="categories" multiple data-live-search="true">
+        {% for category in categories %}
+            <option value="{{ category.pk }}" {% if category in company_categories %} selected {% endif %}>
+                {{ category }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit">Сохранить</button>
+</form>
+
+<hr/>
+
+<form action="{% url 'company-testedit' company.pk %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="form" value="files">
+    <input type="file" name="banner" value="banner">
+    <input type="file" name="picture" value="picture">
+    <button type="submit">Сохранить</button>
+</form>
+
+<hr/>

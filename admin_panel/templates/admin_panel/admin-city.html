@@ -1,0 +1,222 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="Frest admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Frest admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <title>Users List - Frest - Bootstrap HTML admin template</title>
+
+    {% block cssLoader %}
+    {% include 'admin_panel/cssLoader.html' %}
+    {% endblock cssLoader %}
+
+</head>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+
+<body class="vertical-layout vertical-menu-modern semi-dark-layout 2-columns  navbar-sticky footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" data-layout="semi-dark-layout">
+
+    <!-- BEGIN: Header-->
+    {% block content %}
+    {% include 'admin_panel/headerFORM.html' %}
+    {% endblock %}
+    <!-- END: Header-->
+
+
+    <!-- BEGIN: Main Menu-->
+    {% block menu %}
+    {% include 'admin_panel/mainMenuFORM.html' %}
+    {% endblock menu %}
+   <!-- END: Main Menu-->
+
+    <!-- BEGIN: Content-->
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+            </div>
+            <div class="content-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Добавить город</h4>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <form class="form form-horizontal" action="{% url 'city' %}" method="post">
+                                                {% csrf_token %}
+                                                <div class="form-body">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <div class="controls">
+                                                                     <label>Город</label>
+                                                                    <input type="text" id="first-name" class="form-control" name="name" placeholder="Название">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <div class="controls">
+                                                                     <label>Область</label>
+                                                                     <select class="form-control" id="regionSelect"  name="region_id" >
+                                                                         {% for region in regions %}
+                                                                         <option value="{{ region.pk }}">{{region.region_name}}</option>
+                                                                         {% endfor %}
+                                                                     </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                   <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1">Создать</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                      <div class="col-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Список городов</h4>
+                                    </div>
+                                    <div class="users-list-table">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <!-- datatable start -->
+                                    <div class="table-responsive">
+                                        <table id="users-list-datatable" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>id</th>
+                                                    <th>Город</th>
+                                                    <th>Область</th>
+                                                    <th>Изменить</th>
+                                                    <th>Удалить</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for city in cities %}
+                                              <tr>
+                                                  <td>{{ city.pk }}</td>
+                                                  <td>{{ city.city_name }}</td>
+                                                  <td>{{ city.region.region_name }}</td>
+                                                  <td><button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#inlineForm{{city.pk}}">Изменить</button></td>
+                                                  <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteForm{{city.pk}}">Удалить</button></td>
+                                               {% endfor %}
+                                             {% for cit in cities %}
+                                        <div class="modal fade text-left" id="inlineForm{{cit.pk}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" style="display: none;" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                          <div class="modal-content">
+                                                            <div class="modal-header">
+                                                              <h4 class="modal-title" id="myModalLabel33">Изменение {{cit.pk}} </h4>
+                                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <i class="bx bx-x"></i>
+                                                              </button>
+                                                            </div>
+                                                              <form action="{% url 'city-edit' cit.pk %}" method="post" enctype="multipart/form-data">
+                                                                     {% csrf_token %}
+                                                                  <input type="hidden" name="form" value="edit">
+                                                              <div class="modal-body">
+                                                                <label>Город:</label>
+                                                                <div class="form-group">
+                                                                  <input type="text" placeholder="Название" class="form-control" name="name" value="{{cit.city_name}}">
+                                                                </div>
+                                                                <label>Область:</label>
+                                                                 <select class="form-control" id="regionSelect2"  name="region_id" >
+                                                                         {% for region in regions %}
+                                                                         <option value="{{ region.pk }}">{{region.region_name}}</option>
+                                                                         {% endfor %}
+                                                                 </select>
+
+
+                                                              </div>
+                                                              <div class="modal-footer">
+                                                                <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                                                                  <i class="bx bx-x d-block d-sm-none"></i>
+                                                                  <span class="d-none d-sm-block">Закрыть</span>
+                                                                </button>
+                                                                <button type="submit" class="btn btn-primary ml-1">Отправить</button>
+                                                              </div>
+
+                                                            </form>
+
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                {% endfor %}
+                                                  {% for ct in cities %}
+                                                              <form action="{% url 'city-edit' ct.pk %}" method="post" id="delete-tarif{{ct.pk}}">
+                                                                    {% csrf_token %}
+                                                                     <input type="hidden" name="form" value="delete">
+
+                                                                    </form>
+                                                              {% endfor %}
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <!-- datatable ends -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                </div>
+                      </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Content-->
+
+    {% for c in cities %}
+    <div class="modal text-left" id="deleteForm{{c.pk}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+
+              <div class="modal-body">
+                  <div class="swal2-icon swal2-warning swal2-animate-warning-icon" style="display: flex;"><span class="swal2-icon-text">!</span></div>
+                  <h4 class="modal-title text-center" >Вы действительно хотите удалить город?</h4>
+                  <p class="text text-center">Данное действие невозможно отменить.</p>
+              <div class="mt-2 d-flex flex-sm-row flex-column justify-content-center">
+                <a type="reset" class="btn btn-light mb-1 mr-sm-1 text-white" data-dismiss="modal" aria-label="Close">Закрыть</a>
+               <input type="submit" class="btn btn-danger mb-1" form="delete-tarif{{c.pk}}" value="Удалить город">
+              </div>
+              </div>
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+    </div>
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+    <!-- BEGIN: Footer-->
+    {% block footer %}
+    {% include 'admin_panel/footerFORM.html' %}
+    {% endblock footer %}
+    <!-- END: Footer-->
+
+    {% block jsLoader %}
+    {% include 'admin_panel/jsLoader.html' %}
+    {% endblock jsLoader %}
+
+</body>
+<!-- END: Body-->
+
+</html>
